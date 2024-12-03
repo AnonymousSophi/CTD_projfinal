@@ -24,6 +24,14 @@ architecture arc of datapath is
 --============================================================--
 --                      COMPONENTS                            --
 --============================================================--
+
+------------------- ButtonSync ------------------------
+
+component ButtonSync is 
+port (KEY0, KEY1, CLK: in  std_logic;
+     BTN0, BTN1   : out std_logic);
+end component;
+
 -------------------DIVISOR DE FREQUENCIA------------------------
 
 component Div_Freq is
@@ -47,18 +55,17 @@ port(
 	Round: out std_logic_vector(3 downto 0);
 	end_round: out std_logic
 	);
-			
 end component;
 
 -------------------ELEMENTOS DE MEMORIA-------------------------
 
---component reg4bits is 
---port(
---    CLK, RST, enable: in std_logic;
---    D: in std_logic_vector(3 downto 0);
---    Q: out std_logic_vector(3 downto 0)
---    );
---end component;
+component reg4bits is 
+port(
+    CLK, RST, enable: in std_logic;
+    D: in std_logic_vector(3 downto 0);
+    Q: out std_logic_vector(3 downto 0)
+    );
+end component;
 
 component reg8bits is 
 port (
@@ -167,6 +174,7 @@ signal entrada2_mux8bits: std_logic_vector(7 downto 0);    -- p/ ("1010" & SomaD
 signal dec_hex_1, dec_hex_0: std_logic_vector(3 downto 0); -- sinais extra 4bits
 
 begin
+
 ------------------------DIVISOR FREQ------------------------------
 
 --DIV: Div_Freq port map (CLOCK_50, R2, clk_1); -- Para teste no emulador, comentar essa linha e usar o CLK_1Hz
@@ -179,7 +187,7 @@ COUNTER_0_TO_10: counter0to10 port map (E3, R2, clk_1, Round, end_round);
 
 -------------------ELEMENTOS DE MEMORIA-------------------------
 
---REG4BITS: reg4bits port map (CLOCK_50, R2, );                             ------------- ???
+--REG4BITS: reg4bits port map (CLOCK_50, R2, ); ------------- ???
 REG8BITS_1: reg8bits port map (CLOCK_50, R2, E1, SW(7 downto 0), Saida_reg8bits);
 REG8BITS_2: reg8bits port map (CLOCK_50, R2, enable_mux, MuxSelDig, valorfin_vector);
 REG_10BITS: reg10bits port map (CLOCK_50, R2, E2, SW(9 downto 0), ComparaSelDig); 
@@ -205,7 +213,7 @@ MUX_2x1_LEVELCODE: mux2pra1_7bits port map (E1, decMuxCode, Tempo, muxMux2);   -
 MUX_2x1_8BITS: mux2pra1_8bits port map (E5, entrada1_mux8bits, entrada2_mux8bits, MuxSelDig);
 
 -- 10bits
-MUX_2x1_10BITS: mux2pra1_10bits port map (E5, "0000000000", SelecionadaROM, LEDR);
+MUX_2x1_10BITS: mux2pra1_10bits port map (E5, EntradaLEDS, SelecionadaROM, LEDR);
 
 -------------------COMPARADORES E SOMA--------------------------
 
@@ -233,10 +241,19 @@ enable_mux_T <= E1 or E2;
 enable_muxDecT <= R1 xor R2;
 entrada1_mux8bits <= ("000" & end_game_interno & not(Round));
 entrada2_mux8bits <= ("1010" & SomaDigitada);
+
 Tempo <= "1111111";
 
+t <= "0000111";
+n <= "0101011";
+r <= "0101111";
+
+EntradaLEDS <= "0000000000";
+
 -- Sinal auxiliar end_game
-end_game <= end_game_interno;
+end_game <= not(end_game_interno);
+
+            --end_game <= end_game_interno;
 
 -- Divisão saída reg8bits #1
 Level_time <= Saida_reg8bits(3 downto 0); -- LSB saída
