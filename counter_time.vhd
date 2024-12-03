@@ -3,10 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all; -- Permite operações aritméticas diretamente com std_logic_vector
 
 entity counter_time is
-    port(
-        Enable   : in std_logic;
-        Reset    : in std_logic;
-        CLOCK    : in std_logic;
+    port(Enable, Reset, CLOCK: in std_logic;
         load     : in std_logic_vector(3 downto 0); -- Valor inicial da contagem
         end_time : out std_logic;                  -- Sinal ativo quando o tempo acaba
         tempo    : out std_logic_vector(3 downto 0) -- Valor atual do contador
