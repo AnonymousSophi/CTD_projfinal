@@ -191,15 +191,15 @@ ROM0: ROM port map (Level_code, SelecionadaROM);
 MUX_2X1_4BITS: mux2pra1_4bits port map(E2, SaidaCountT, Level_time, CounterTMux); -- saída (CounterTMux) entra no decod7seg (para o display decodificador)
 
 -- 7bits
-MUX_2x1_T: mux2pra1_7bits port map (enable_mux_T, t, "1111111", HEX5); -- letra 't' p/ display, (HEX5)
+MUX_2x1_T: mux2pra1_7bits port map (enable_mux_T, t, Tempo, HEX5); -- letra 't' p/ display, (HEX5)
 
-MUX_2x1_decT: mux2pra1_7bits port map (enable_mux_T, decMux4, "1111111", HEX4); -- (HEX4)
+MUX_2x1_decT: mux2pra1_7bits port map (enable_mux_T, decMux4, Tempo, HEX4); -- (HEX4)
 
 MUX_2x1_R: mux2pra1_7bits port map (enable_muxDecT, r, muxMux3, HEX3);-- (HEX3)
-MUX_2x1_N: mux2pra1_7bits port map (E1, n, "1111111", muxMux3);  -- (HEX3)AUXILIAR
+MUX_2x1_N: mux2pra1_7bits port map (E1, n, Tempo, muxMux3);  -- (HEX3)AUXILIAR
 
 MUX_2x1_ROUND: mux2pra1_7bits port map (enable_muxDecT, decMuxRound, muxMux2, HEX2); -- (HEX2)
-MUX_2x1_LEVELCODE: mux2pra1_7bits port map (E1, decMuxCode, "1111111", muxMux2);   -- (HEX2)AUXILIAR
+MUX_2x1_LEVELCODE: mux2pra1_7bits port map (E1, decMuxCode, Tempo, muxMux2);   -- (HEX2)AUXILIAR
 
 -- 8bits
 MUX_2x1_8BITS: mux2pra1_8bits port map (E5, entrada1_mux8bits, entrada2_mux8bits, MuxSelDig);
@@ -233,6 +233,7 @@ enable_mux_T <= E1 or E2;
 enable_muxDecT <= R1 xor R2;
 entrada1_mux8bits <= ("000" & end_game_interno & not(Round));
 entrada2_mux8bits <= ("1010" & SomaDigitada);
+Tempo <= "1111111";
 
 -- Sinal auxiliar end_game
 end_game <= end_game_interno;
